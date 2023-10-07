@@ -70,10 +70,33 @@ class RadixNode:
             matching_string, remaining_prefix, remaining_token = incoming_node.match(token)
             if remaining_prefix != "":
                 return []
+                
             elif remaining_token == "":
                 return incoming_node.indices
             else:
                 return incoming_node.search_tokens(remaining_token)
+
+
+
+    def delete_tree(self):
+        """Recursively delete all nodes in the radix tree."""
+        for node in self.nodes.values():
+            node.delete_tree()
+        
+        # Clear the current node
+        self.nodes.clear()
+        self.indices.clear()
+        self.is_leaf = False
+        self.prefix = ""
+
+    def __str__(self, level=0):
+        prefix_str = f"Prefix: {self.prefix}, Indices: {self.indices}"
+        ret = "\t" * level + prefix_str + "\n"
+
+        for char, node in self.nodes.items():
+            ret += node.__str__(level + 1)
+
+        return ret
 
 def color_matched_words(words, matched_indices):
     """Given a list of words and a list of indices of matched words, 
@@ -166,36 +189,45 @@ def main(filename, pattern):
     try:
         root = RadixNode()
 
-        cache_file = open(filename, "r").read().split()
+        cache_file_lines = open(filename, "r").read().split("\n")
 
-        for index, token in enumerate(cache_file):
-            root.insert_token(token, index)
+        for line in cache_file_lines:
+            words=line.split()
+            # Remove non-alphanumeric characters inside each word
+            # Use re.sub to replace the matched characters with an empty string
+            for index, token in enumerate(words):
+                root.insert_token(token, index)
 
-        # Split the regular expression into components (you may need a proper regex parser)
-        components = pattern.split(".*")
+            # Search for each component and accumulate the matching indices
+            matching_indices = []
+            founded_indices = root.search_tokens(pattern)
+            matching_indices.extend(founded_indices)
 
-        # Search for each component and accumulate the matching indices
-        matching_indices = []
-        for component in components:
-            component_indices = root.search_tokens(component)
-            matching_indices.extend(component_indices)
+            # Print the matched indices
+            colored_words = color_matched_words(words, matching_indices)
+            print(" ".join(colored_words))
+            root.delete_tree()
 
-        # Print the matched indices
-        colored_words = color_matched_words(cache_file, matching_indices)
-        print(" ".join(colored_words))
+
         
     except Exception as e:
         print(f"Error: {e}")
 
 
 if __name__ == "__main__":
-	filename=sys.argv[1]
-	pattern=sys.argv[2]
-	if len(sys.argv)==4:
-		if sys.argv[3] == "test":
-			test(filename, pattern)
-		else:
-			print("Bad arguments. Usage: python3 radixtree.py <filename> <pattern> [test]")
-			exit()
-	else:
-		main(filename, pattern)
+    filename=sys.argv[1]
+    pattern=sys.argv[2]
+        
+    # check if pattern as only alfanumeric characters
+    if not pattern.isalnum():
+        print("Error: pattern must contain only alphanumeric characters")
+        exit()
+
+    if len(sys.argv)==4:
+        if sys.argv[3] == "test":
+            test(filename, pattern)
+        else:
+            print("Bad arguments. Usage: python3 radixtree.py <filename> <pattern> [test]")
+            exit()
+    else:
+        main(filename, pattern)
