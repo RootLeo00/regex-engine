@@ -1,0 +1,52 @@
+<project name="regex-engine" default="dist" basedir=".">
+    <description>
+        build file for regex-engine project
+    </description>
+    <!-- set global properties for this build -->
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="dist"/>
+    <property name="lib" location="lib"/>
+
+    <!-- Define a path element for your library dependencies -->
+    <path id="lib.path">
+        <fileset dir="${lib}">
+            <include name="opencsv-5.8.jar"/> <!-- Specify the JAR file you need -->
+            <!-- Add other JAR files as needed -->
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="compile" depends="init"
+            description="compile the source">
+        <!-- Compile the Java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}">
+            <!-- Include the library dependencies in the classpath -->
+            <classpath>
+                <path refid="lib.path"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile"
+            description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+
+        <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+        <jar jarfile="${dist}/lib/regex-engine-${DSTAMP}.jar" basedir="${build}"/>
+    </target>
+
+    <target name="clean"
+            description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+</project>
