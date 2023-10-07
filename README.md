@@ -76,4 +76,45 @@ To run the program with the KMP search engine and perform tests:
 The program will display the matching results in the terminal and, eventually, save the test results to output files located in the "output" directory.
 
 
+# Additional features
 
+### Plot graphs
+You can use this script to generate timing data plots for different search engines and input lengths. It is supposed to be used after you perform the tests, which generates the timing data in pickle or csv format under the ```output``` folder. It saves the plot in .png format into th Here's how to use the script:
+
+```bash
+python ./graphs/plot_timing.py
+```
+The script expects input files in either CSV or pickle format. Of course, it is easy to twick the code in order to accept other formats (it's just Python ...). 
+You can specify the input files in the script itself by modifying the file variable in the if ```__name__ == "__main__"```: section. Each file should contain timing data for a specific search engine and input length.
+
+
+# Files details
+```
+├──  graphs  
+│    └── plot_timing.py  - program to draw timing data plots
+│    └── finalgraphs  - good graphs from good tests
+|
+├──  input   
+│    └── *.txt - different text file as input text
+│    └── ... 
+|
+├──  jar   
+│    └── main - where I put the regex-engine with the Main class as main
+│    └── test - where I put the regex-engine with the Test class as main
+|
+├──  kmp   
+│    └── kmp.py - program to run KMP search
+|
+├──  radixtree   
+│    └── radixtree.py - program to run RadixTree search
+|
+├──  output   
+│    └── kmp.py - program to run KMP search
+│    └── finaltests  - good tests outputs
+|
+├──  lib - folder with library used by Java automata
+|
+├──  src - folder with the Java project for the Automa search engine
+│
+├──  launch-egrep.sh - file to launch the main program that selects the different engines
+```

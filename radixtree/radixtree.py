@@ -139,7 +139,7 @@ def test(filename, pattern):
             df = testtiming(txt[:i], pattern, df)
 
         #store df in a pickle file
-        df.to_pickle("../output/output_radixtree_textlength.pkl")
+        df.to_pickle("./output/output_radixtree_textlength.pkl")
         #test with different pattern length
         df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
         pattern=txt[:10000]
@@ -147,7 +147,7 @@ def test(filename, pattern):
         for i in range(5, 5000, 10): #step 10
             print("test with pattern length: ", i)
             df = testtiming(txt[:10000], pattern[:i], df)
-        df.to_pickle("../output/output_radixtree_patternlength.pkl")
+        df.to_pickle("./output/output_radixtree_patternlength.pkl")
         
     except Exception as e:
         print(f"Error: {e}")

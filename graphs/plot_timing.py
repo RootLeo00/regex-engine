@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 def plot_timing(file, x, y):
     # Initialize lists to store dataframes and plot labels
@@ -16,17 +17,15 @@ def plot_timing(file, x, y):
     # Loop through input files
     for f in file:
         # If the file ends with 'pkl', read it as a pickle file
-        if f.split(".")[1] == "pkl":
-            print("reading pickle: ", f.split(".")[1])
+        if os.path.splitext(f)[1] == ".pkl":
             listdf.append(pd.read_pickle(f))
         # If the file ends with 'csv', read it as a CSV file
-        if f.split(".")[1] == "csv":
+        if os.path.splitext(f)[1] == ".csv":
             listdf.append(pd.read_csv(f))
 
         # Retrieve engine name and pattern from the file path
         tmp = f.split("/")[-1]
         name.append(tmp.split("_")[1])
-        print("name", name)
 
         # Plot xtick every 10 elements
         df = listdf[i]
@@ -43,25 +42,31 @@ def plot_timing(file, x, y):
     plt.ylabel(y, fontsize=12)  # Set y-axis label
 
     # Save the plot as an image and display it
-    plt.savefig('./' + x + '_' + y + '.png')
+    plt.savefig('./graphs/' + x + '_' + y + '.png')
     plt.show()
 
 if __name__ == "__main__":
     # List of input files
     file = [
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_automa_patternlength.csv",
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_kmp_patternlength.pkl",
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_radixtree_patternlength.pkl",
+        "./output/finaltests/output_automa_patternlength.csv",
+        "./output/finaltests/output_kmp_patternlength.pkl",
+        "./output/finaltests/output_radixtree_patternlength.pkl",
     ]
+
+    # verify that the file exists
+    for f in file:
+        if not os.path.isfile(f):
+            print("Error: file not found: ", f)
+            exit()
 
     # Create a plot for pattern length vs. time elapsed
     plot_timing(file, "pattern_len", "time_elapsed")
 
     # List of input files
     file = [
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_automa_textlength.csv",
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_radixtree_textlength.pkl",
-        "/home/leo/github/gutenberg-app/regex-engine/output/output_kmp_textlength.pkl"
+        "./output/finaltests/output_automa_textlength.csv",
+        "./output/finaltests/output_radixtree_textlength.pkl",
+        "./output/finaltests/output_kmp_textlength.pkl"
     ]
 
     # Create a plot for text length vs. time elapsed

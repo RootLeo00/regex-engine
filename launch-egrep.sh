@@ -36,7 +36,7 @@ is_test=false
 
 # Check if is_test argument is provided (default to empty string if not)
 if [ $# -eq 4 ]; then
-    if $4 == "test"; then is_test=true
+    if [ $4 == "test" ]; then is_test=true
     else
         echo "Invalid argument: $4"
         echo "Usage: $0 <regex_engine> <input_filename> <regex> [test]"
@@ -51,11 +51,11 @@ fi
 case $regex_engine in
     "automa")
         if [ $is_test = true ]; then
-            chmod +x ./out/artifacts/regex_engine_jar/regex-engine.jar
-            java -jar "./out/artifacts/regex_engine_jar/regex-engine.jar" "$input_filename" "$regex" "test"
+            chmod +x ./jar/main/regex-engine.jar 
+            java -jar "./jar/main/regex-engine.jar" "$input_filename" "$regex"
         else
-            chmod +x ./out/artifacts/regex_engine_jar/regex-engine.jar
-            java -jar "./out/artifacts/regex_engine_jar/regex-engine.jar" "$input_filename" "$regex"
+            chmod +x ./jar/test/regex-engine.jar 
+            java -jar "./jar/test/regex-engine.jar" "$input_filename" "$regex"
         fi
         ;;
     "kmp")

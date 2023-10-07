@@ -121,7 +121,7 @@ def test(filename, pattern):
 			df = testtiming(txt[:i], pattern, df)
 
 		print(df)
-		df.to_pickle("../output/output_kmp_textlength.pkl")
+		df.to_pickle("./output/output_kmp_textlength.pkl")
 
 		#test with different pattern length
 		df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
@@ -130,7 +130,7 @@ def test(filename, pattern):
 		for i in range(5, 5000, 10): 
 			print("test with pattern length: ", i)
 			df = testtiming(txt[:10000], pattern[:i], df)
-		df.to_pickle("../output/output_kmp_patternlength.pkl")
+		df.to_pickle("./output/output_kmp_patternlength.pkl")
 		print(df)
 	except Exception as e:
 		print(f"Error: {e}")

@@ -5,13 +5,14 @@ import java.io.*;
 public class Test {
 
     public static void main(String[] args) throws IOException {
+        System.out.println("TEST AUTOMA");
         test_textlength(args);
         test_patternlength(args);
 
     }
     public static void test_textlength(String[] args) throws IOException {
         //initialize result
-        //results.add(new String[]{"ncharacters", "pattern_len", "time_elapsed"});
+        System.out.println("Test with different number of characters in the text, from 1000 to 100000");
         String filename= "/home/leo/github/gutenberg-app/regex-engine/input/book-about-babylone.txt";
         // open filename
         File file = new File(filename);
@@ -73,7 +74,7 @@ public class Test {
         writer.close();
     }
     public static void test_patternlength(String[] args) throws IOException {
-
+        System.out.println("Test with different number of characters in the pattern, from 5 to 100");
         String filename= "/home/leo/github/gutenberg-app/regex-engine/input/book-about-babylone.txt";
         // open filename
         File file = new File(filename);
