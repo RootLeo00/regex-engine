@@ -16,7 +16,9 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>4.1</version>
+            <version>5.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/opencsv-5.8.jar</systemPath>
         </dependency>
 
     </properties>
