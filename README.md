@@ -1,5 +1,11 @@
 # Cloning egrep command supporting simplified ERE.
 
+
+##### Table of Contents  
+[Introduction](#introduction)  
+[Getting Started](#getting-started)  
+[Files details](#files-details)  
+
 # Introduction
 
 ## What is a RegEx
@@ -25,6 +31,8 @@ a solution for such a problem. Several strategies can be taken into account. In 
    
    This is specific to the case when the RegEx is not only reduced to a series of concatenations, but also composed exclusively of alphabetic characters. We assume here that : (forward indexing) the input text file has been pre-processed in order to produce a cache-file containing a table of indices representing the list of all the useful words (in human language) appearing in the text file, these are also called “tokens” ; (inverted indexing) furthermore, the cache-file containing all tokens can be represented by optimised search structures such as a radix tree containing all these words. Then, finding the RegEx is performed by browsing the index table and/or the radix tree.
 
+# Getting Started
+
 ## Prerequisites
 
 Before you can run the program, ensure that you have the following prerequisites installed on your system:
@@ -34,8 +42,7 @@ Before you can run the program, ensure that you have the following prerequisites
   - colorama
   - pandas
 
-## Getting Started
-
+## Run the program
 You can use the program with different search engines (automata, KMP, Radix Tree) and perform searches on various text inputs. Here's how to use the program:
 
 1. Clone or download this repository to your local machine.
@@ -59,7 +66,7 @@ You can use the program with different search engines (automata, KMP, Radix Tree
 
     - ```[is_test]``` (Optional): Use this flag to run test scenarios. If specified as "test," the program will perform a series of tests and measure execution times for various input lengths and pattern lengths.
   
-# Examples
+## Examples
 
 To perform a search using the Automaton-based search engine:
 
@@ -76,7 +83,7 @@ To run the program with the KMP search engine and perform tests:
 The program will display the matching results in the terminal and, eventually, save the test results to output files located in the "output" directory.
 
 
-# Additional features
+## Additional features
 
 ### Plot graphs
 You can use this script to generate timing data plots for different search engines and input lengths. It is supposed to be used after you perform the tests, which generates the timing data in pickle or csv format under the ```output``` folder. It saves the plot in .png format into th Here's how to use the script:
