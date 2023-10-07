@@ -1,4 +1,8 @@
 from colorama import Fore, Style
+import sys
+import time
+import pandas as pd
+
 class RadixNode:
     def __init__(self, prefix: str = "", is_leaf: bool = False) -> None:
         # Mapping from the first character of the prefix of the node
@@ -12,19 +16,11 @@ class RadixNode:
         # List of indices of tokens that match this prefix
         self.indices = []
 
-    # ... (other methods remain the same)
+    
     def match(self, word: str) -> tuple[str, str, str]:
-        """Compute the common substring of the prefix of the node and a word
-
-        Args:
-            word (str): word to compare
-
-        Returns:
-            (str, str, str): common substring, remaining prefix, remaining word
-
-        >>> RadixNode("myprefix").match("mystring")
-        ('my', 'prefix', 'string')
-        """
+        """ Computes the common substring between the prefix of the node and a 
+        given word, returning the common substring, remaining prefix, and remaining word."""
+        
         x = 0
         for q, w in zip(self.prefix, word):
             if q != w:
@@ -33,8 +29,11 @@ class RadixNode:
             x += 1
 
         return self.prefix[:x], self.prefix[x:], word[x:]
+    
     def insert_token(self, token: str, index: int) -> None:
-        """Insert a token (word) into the radix tree with its index"""
+        """Inserts a token (word) into the radix tree with its index. Handles cases where 
+        the token partially or fully matches existing nodes in the tree."""
+
         if self.prefix == token and not self.is_leaf:
             self.is_leaf = True
             self.indices.append(index)
@@ -63,7 +62,7 @@ class RadixNode:
                     self.nodes[matching_string[0]].insert_token(remaining_token, index)
 
     def search_tokens(self, token: str) -> list:
-        """Search for a token in the radix tree and return its indices"""
+        """Searches for a token in the radix tree and returns a list of matching token indices."""
         incoming_node = self.nodes.get(token[0], None)
         if not incoming_node:
             return []
@@ -77,6 +76,10 @@ class RadixNode:
                 return incoming_node.search_tokens(remaining_token)
 
 def color_matched_words(words, matched_indices):
+    """Given a list of words and a list of indices of matched words, 
+    this function returns a list of colored words, 
+    where matched words are colored in red using the Colorama library."""
+
     colored_words = []
     for i, word in enumerate(words):
         if i in matched_indices:
@@ -87,6 +90,7 @@ def color_matched_words(words, matched_indices):
     return colored_words
 
 def write_to_file(file_path, content):
+    """Writes the given content to a file specified by file_path."""
     try:
         with open(file_path, "w") as file:
             file.write(content)
@@ -94,42 +98,14 @@ def write_to_file(file_path, content):
     except Exception as e:
         print(f"Error: {e}")
 
-import sys
 
-def debug():
-    root = RadixNode()
-    # Load the cache-file and build the radix tree with token indices
-    cache_file = open("../input/book-about-babylone.txt", "r").read().split()
-    #cache_file = ["this", "is", "a", "sample", "sentence", "ciao", "ciao", "amore"]
-    for index, token in enumerate(cache_file):
-        root.insert_token(token, index)
+def test(filename, pattern):
+    """ A function to run performance tests on the Radix Tree search algorithm. 
+    It tests different numbers of characters 
+    and pattern lengths and records the time taken for each test case."""
 
-    # Example regular expression to search
-    # pattern = "ciao.*amore"
-    pattern= "Gutenberg"
+    print("---------[TEST] RADIXTREE SEARCH with args: ", filename, pattern, "-----------")
 
-    # Split the regular expression into components (you may need a proper regex parser)
-    components = pattern.split(".*")
-
-    # Search for each component and accumulate the matching indices
-    matching_indices = []
-    for component in components:
-        component_indices = root.search_tokens(component)
-        matching_indices.extend(component_indices)
-
-    # Print the matched indices
-    print("Matching indices:", matching_indices)
-    colored_words = color_matched_words(cache_file, matching_indices)
-    print(" ".join(colored_words))
-    #write on ouput file
-    write_to_file("../output/output_radixtree.txt", " ".join(colored_words))
-
-import time
-import pandas as pd
-def test():
-    print("---------[TEST] RADIXTREE SEARCH with args: ", sys.argv[1:], "-----------")
-    filename=sys.argv[1]
-    pattern=sys.argv[2]
     #create pandas table to store the results with columns: number of characters in filename, pattern, time_elapsed
     df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
 
@@ -139,7 +115,6 @@ def test():
             print("test with ncharacters: ", i)
             df = testtiming(txt[:i], pattern, df)
 
-        print(df)
         #store df in a pickle file
         df.to_pickle("../output/output_radixtree_textlength.pkl")
         #test with different pattern length
@@ -155,6 +130,9 @@ def test():
         print(f"Error: {e}")
 
 def testtiming(cache_file, pattern, df):
+    """Performs the timing test by building a Radix Tree from a cache file and 
+    searching for a pattern. 
+    It records the time taken and returns the results as a pandas DataFrame."""
     ncharacters= len(cache_file)
     start =time.time()
     root = RadixNode()
@@ -173,7 +151,7 @@ def testtiming(cache_file, pattern, df):
 
     # Print the matched indices
     # colored_words = color_matched_words(cache_file, matching_indices)
-    # print("".join(colored_words))
+    # print(" ".join(colored_words))
     time_elapsed = time.time() - start
     
 
@@ -182,10 +160,9 @@ def testtiming(cache_file, pattern, df):
     return df
 
 
-def main():
-    print("---------RADIXTREE SEARCH with args: ", sys.argv[1:], "-----------")
-    filename=sys.argv[1]
-    pattern=sys.argv[2]
+def main(filename, pattern):
+    print("---------RADIXTREE SEARCH with args: ", filename, pattern, "-----------")
+
     try:
         root = RadixNode()
 
@@ -205,11 +182,20 @@ def main():
 
         # Print the matched indices
         colored_words = color_matched_words(cache_file, matching_indices)
-        print("".join(colored_words))
+        print(" ".join(colored_words))
         
     except Exception as e:
         print(f"Error: {e}")
 
+
 if __name__ == "__main__":
-    # main()
-    test()
+	filename=sys.argv[1]
+	pattern=sys.argv[2]
+	if len(sys.argv)==4:
+		if sys.argv[3] == "test":
+			test(filename, pattern)
+		else:
+			print("Bad arguments. Usage: python3 radixtree.py <filename> <pattern> [test]")
+			exit()
+	else:
+		main(filename, pattern)

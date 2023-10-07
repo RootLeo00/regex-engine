@@ -1,8 +1,13 @@
 from colorama import Fore, Style
 import sys
+import time
+import pandas as pd
 
-# Python program for KMP Algorithm
 def KMPSearch(pattern, txt, lps):
+	"""
+	Implements the Knuth-Morris-Pratt (KMP) string search algorithm to find all occurrences of a pattern in a given text (txt). 
+	It returns a list of indices where the pattern matches in the text.
+	"""
 	M = len(pattern)
 	N = len(txt)
 	matching_indexes = []
@@ -32,6 +37,8 @@ def KMPSearch(pattern, txt, lps):
 	return matching_indexes
 
 def computeLPSArray(pattern, M):
+	""" Computes the Longest Prefix Suffix (LPS) array for a given pattern of length M. 
+	This array helps in efficient pattern matching."""
 	len = 0 # length of the previous longest prefix suffix
 	lps = [0]*M
 
@@ -56,8 +63,8 @@ def computeLPSArray(pattern, M):
 
 def computeCarryOverArray(pattern, M, lps):
 	"""
-		This is an optimization of the computeLPSArray function
-        :param pattern: patterntern, M: length of patterntern, lps: longest prefix suffix        
+		An optimization of computeLPSArray, 
+		further enhancing the LPS array to avoid unnecessary comparisons.        
     """
 
 	# the loop calculates lps[i] for i = 0 to M-1
@@ -72,6 +79,8 @@ def computeCarryOverArray(pattern, M, lps):
 	return lps
 
 def print_color_matched_words(text, matched_indices, len_pattern):
+	"""Formats and prints the text with matched patterns colored in red using the Colorama library. 
+	It returns a colored version of the input text."""
 	colored_text = ""
 	current_index = 0
 
@@ -94,33 +103,11 @@ def print_color_matched_words(text, matched_indices, len_pattern):
 	return colored_text
 
 
-def debug():
-	txt = open("../input/book-about-babylone.txt", "r").read()
-	lines=[line for line in txt.split("\n")]
-	pattern = "Gutenberg"
-
-	matching_indices=[]
-	try:
-		file= open("../output/output_kmp.txt", "w")
-		for l in lines:
-			lps=computeLPSArray(pattern, len(pattern))
-			print("lps", lps)
-			lps=computeCarryOverArray(pattern, len(pattern), lps)
-			print("carryover", lps)
-			matched_index= KMPSearch(pattern, l, lps)
-			# write on ouput file
-			file.write(print_color_matched_words(l, matched_index, len(pattern)))
-			matching_indices+=matched_index
-	except Exception as e:
-		print(f"Error: {e}")
-
-    # Print the matched indices
-	print("Matching indices:", matching_indices)
-
-import time
-import pandas as pd
 def test(filename, pattern):
-	print("---------[TEST] KMP SEARCH with args: ", sys.argv[1:], "-----------")
+	"""Performs performance tests on the KMP string search algorithm. 
+	It tests different numbers of characters and pattern lengths and records the time taken for each test case. 
+	Results are stored in a pandas DataFrame and saved as a pickle file."""
+	print("---------[TEST] KMP SEARCH with args: ", filename, pattern, "-----------")
 
 	#create pandas table to store the results with columns: number of characters in filename, pattern, time_elapsed
 	df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
@@ -148,38 +135,36 @@ def test(filename, pattern):
 	except Exception as e:
 		print(f"Error: {e}")
 
+
 def testtiming(txt, pattern, df):
+	"""Measures the time it takes to run the KMP search algorithm on a given text and pattern. 
+	It records the time taken and returns the results as a pandas DataFrame."""
 	lines = txt.split("\n")
 	time_elapsed = 0.0
 	#iterate over each line of lines and count the number of characters in each line
 	ncharacters= len(txt)
-	# start =time.time()
 	# Preprocess the pattern (calculate lps[] array)
 	lps=computeLPSArray(pattern, len(pattern))
 	lps=computeCarryOverArray(pattern, len(pattern), lps)
-	# time_elapsed = time.time() - start
 
 	for l in lines:
 		start =time.time()
 		matched_index= KMPSearch(pattern, l, lps)
 		time_elapsed += time.time() - start
-		# print_color_matched_words(l, matched_index, len(pattern))
 
 	newdf= pd.DataFrame([[ncharacters, len(pattern), time_elapsed]], columns=['ncharacters', 'pattern_len', 'time_elapsed'])
 	df = pd.concat([df,newdf], ignore_index=True)
 	return df
 
-def main():
-	print("---------KMP SEARCH with args: ", sys.argv[1:], "-----------")
-	filename=sys.argv[1]
-	pattern=sys.argv[2]
+def main(filename, pattern):
+	print("---------KMP SEARCH with args: ", filename, pattern, "-----------")
 	
 	try:
 		lines = open(filename, "r").read().split("\n")
 		lps=computeLPSArray(pattern, len(pattern))
 		lps=computeCarryOverArray(pattern, len(pattern), lps)
 		for l in lines:
-			matched_index= KMPSearch(pattern, l)
+			matched_index= KMPSearch(pattern, l, lps)
 			print_color_matched_words(l, matched_index, len(pattern))
 	
 	except Exception as e:
@@ -187,11 +172,13 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
 	filename=sys.argv[1]
 	pattern=sys.argv[2]
-	test(filename=filename, pattern=pattern)
-
-	
-
-
+	if len(sys.argv)==4:
+		if sys.argv[3] == "test":
+			test(filename=filename, pattern=pattern)
+		else:
+			print("Bad arguments. Usage: python3 kmp.py <filename> <pattern> [test]")
+			exit()
+	else:
+		main(filename, pattern)
