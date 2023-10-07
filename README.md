@@ -71,13 +71,13 @@ You can use the program with different search engines (automata, KMP, Radix Tree
 To perform a search using the Automaton-based search engine:
 
 ```bash
-./launch-egrep.sh "automa" "path_to_input.txt" "randomword"
+./launch-egrep.sh "automa" "./input/book-about-babylone.txt" "S(a|r|g)+on"
 ```
 
 To run the program with the KMP search engine and perform tests:
 
 ```bash
-./launch-egrep.sh "kmp" "path_to_input.txt" "randomword" "test"
+./launch-egrep.sh "kmp" "./input/book-about-babylone.txt" "Babylone" "test"
 ```
 
 The program will display the matching results in the terminal and, eventually, save the test results to output files located in the "output" directory.
