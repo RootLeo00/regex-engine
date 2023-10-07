@@ -38,17 +38,37 @@ def plot_timing(file, x, y):
     plt.yticks(fontsize=12)
 
     plt.legend()  # Show legend
-    plt.xlabel(x, fontsize=12)  # Set x-axis label
-    plt.ylabel(y, fontsize=12)  # Set y-axis label
+
+    # Set x-axis label
+    if x == "pattern_len":
+        plt.xlabel("Pattern length", fontsize=12)
+    elif x == "ncharacters":
+        plt.xlabel("Text length", fontsize=12)
+    elif x == "time_elapsed":
+        plt.xlabel("Time [s]", fontsize=12) 
+    else:
+        plt.xlabel(x, fontsize=12)  # Set x-axis label
+    
+    # Set y-axis label
+    if y == "pattern_len":
+        plt.ylabel("Pattern length", fontsize=12)
+    elif y == "ncharacters":
+        plt.ylabel("Text length", fontsize=12)
+    elif y == "time_elapsed":
+        plt.ylabel("Time [s]", fontsize=12) 
+    else:
+        plt.ylabel(y, fontsize=12) 
+    
 
     # Save the plot as an image and display it
-    plt.savefig('./graphs/' + x + '_' + y + '.png')
+    names_engine= "_".join(name)
+    plt.savefig('./graphs/' + x + '_' + y  + '_' +names_engine+ '.png')
     plt.show()
 
 if __name__ == "__main__":
     # List of input files
     file = [
-        "./output/finaltests/output_automa_patternlength.csv",
+        # "./output/finaltests/output_automa_patternlength.csv",
         "./output/finaltests/output_kmp_patternlength.pkl",
         "./output/finaltests/output_radixtree_patternlength.pkl",
     ]
@@ -64,7 +84,7 @@ if __name__ == "__main__":
 
     # List of input files
     file = [
-        "./output/finaltests/output_automa_textlength.csv",
+        # "./output/finaltests/output_automa_textlength.csv",
         "./output/finaltests/output_radixtree_textlength.pkl",
         "./output/finaltests/output_kmp_textlength.pkl"
     ]
