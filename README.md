@@ -94,6 +94,11 @@ python ./graphs/plot_timing.py
 The script expects input files in either CSV or pickle format. Of course, it is easy to twick the code in order to accept other formats (it's just Python ...). 
 You can specify the input files in the script itself by modifying the file variable in the if ```__name__ == "__main__"```: section. Each file should contain timing data for a specific search engine and input length.
 
+## For Dev: Build the Java Automa project
+You can build the Java project using Maven or Ant.
+For Ant, there is the ```build.xml``` file.
+For Maven, there is the ```pom.xml``` file.
+Your choice.
 
 # Files details
 ```
