@@ -51,22 +51,28 @@ fi
 case $regex_engine in
     "automa")
         if [ $is_test = true ]; then
+            chmod +x ./out/artifacts/regex_engine_jar/regex-engine.jar
             java -jar "./out/artifacts/regex_engine_jar/regex-engine.jar" "$input_filename" "$regex" "test"
         else
+            chmod +x ./out/artifacts/regex_engine_jar/regex-engine.jar
             java -jar "./out/artifacts/regex_engine_jar/regex-engine.jar" "$input_filename" "$regex"
         fi
         ;;
     "kmp")
         if [ $is_test = true ]; then
+            chmod +x ./kmp/kmp.py
             python3 ./kmp/kmp.py "$input_filename" "$regex" "test"
         else
+            chmod +x ./kmp/kmp.py
             python3 ./kmp/kmp.py "$input_filename" "$regex"
         fi
         ;;
     "radixtree")
         if [ $is_test = true  ]; then
+            chmod +x ./radixtree/radixtree.py
             python3 ./radixtree/radixtree.py "$input_filename" "$regex" "test"
         else
+            chmod +x ./radixtree/radixtree.py
             python3 ./radixtree/radixtree.py "$input_filename" "$regex"
         fi
         ;;
