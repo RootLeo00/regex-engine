@@ -174,6 +174,8 @@ def main(filename, pattern):
 if __name__ == "__main__":
 	filename=sys.argv[1]
 	pattern=sys.argv[2]
+
+	
 	if len(sys.argv)==4:
 		if sys.argv[3] == "test":
 			test(filename=filename, pattern=pattern)
