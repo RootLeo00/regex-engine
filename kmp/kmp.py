@@ -127,9 +127,9 @@ def test(filename, pattern):
 		df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
 		pattern=txt[:10000]
 		print("pattern: ", len(pattern))
-		for i in range(5, 70000, 10): 
+		for i in range(5, 10000, 10): 
 			print("test with pattern length: ", i)
-			df = testtiming(txt[:70000], pattern[:i], df)
+			df = testtiming(txt[:10000], pattern[:i], df)
 		df.to_pickle("./output/output_kmp_patternlength.pkl")
 		print(df)
 	except Exception as e:
@@ -147,8 +147,8 @@ def testtiming(txt, pattern, df):
 
 	# Preprocess the pattern (calculate lps[] array)
 	# uncomment start and time_elapsed to include the preprocessing time
-	# start =time.time() 
-	lps=computeLPSArray(pattern, len(pattern))
+	start =time.time() 
+	# lps=computeLPSArray(pattern, len(pattern))
 	lps=computeCarryOverArray(pattern, len(pattern), lps)
 	# time_elapsed += time.time() - start
 

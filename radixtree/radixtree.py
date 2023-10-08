@@ -144,9 +144,9 @@ def test(filename, pattern):
         df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
         pattern=txt[:10000]
         print("pattern: ", len(pattern))
-        for i in range(5, 70000, 10): #step 10
+        for i in range(5, 10000, 10): #step 10
             print("test with pattern length: ", i)
-            df = testtiming(txt[:70000], pattern[:i], df)
+            df = testtiming(txt[:10000], pattern[:i], df)
         df.to_pickle("./output/output_radixtree_patternlength.pkl")
         
     except Exception as e:
