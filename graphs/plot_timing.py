@@ -23,7 +23,7 @@ def plot_timing(file, x, y):
 
     # Create a figure for the plot
     fig = plt.figure(figsize=(9, 9))
-    plt.subplots_adjust(left=0.25, bottom=0.15)  # Adjust subplot position
+    plt.subplots_adjust(left=0.15, bottom=0.1)  # Adjust subplot position
 
     print("plotting: ", file)
     i = 0
@@ -61,28 +61,28 @@ def plot_timing(file, x, y):
         i += 1
 
     # Set the font size for x and y ticks
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=12)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
 
-    plt.legend()  # Show legend
+    plt.legend(fontsize=15)  # Show legend
 
     # Set x-axis label
     if x == "pattern_len":
-        plt.xlabel("Pattern length", fontsize=12)
+        plt.xlabel("Pattern length", fontsize=15)
     elif x == "ncharacters":
-        plt.xlabel("Text length", fontsize=12)
+        plt.xlabel("Text length", fontsize=15)
     elif x == "time_elapsed":
-        plt.xlabel("Time [s]", fontsize=12) 
+        plt.xlabel("Time [s]", fontsize=15) 
     else:
-        plt.xlabel(x, fontsize=12)  # Set x-axis label
+        plt.xlabel(x, fontsize=15)  # Set x-axis label
     
     # Set y-axis label
     if y == "pattern_len":
-        plt.ylabel("Pattern length", fontsize=12)
+        plt.ylabel("Pattern length", fontsize=15)
     elif y == "ncharacters":
-        plt.ylabel("Text length", fontsize=12)
+        plt.ylabel("Text length", fontsize=15)
     elif y == "time_elapsed":
-        plt.ylabel("Time [s]", fontsize=12) 
+        plt.ylabel("Time [s]", fontsize=15) 
     else:
         plt.ylabel(y, fontsize=12) 
     
