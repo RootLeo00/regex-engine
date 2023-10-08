@@ -54,6 +54,7 @@ You can use the program with different search engines (automata, KMP, Radix Tree
 2. Run the program:
 
     ```bash
+    cd ./regex-engine
     ./launch-egrep.sh <regex_engine> <input_filename> [is_test]
     ```
 
