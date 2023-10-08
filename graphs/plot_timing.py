@@ -1,6 +1,20 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+
+def clear_data(df, dataname, min, max, std_threshold):
+    # Filter by time_elapsed within the specified range
+    df = df[(df[dataname] >= min) & (df[dataname] <= max)]
+
+    # Calculate the mean and standard deviation of time_elapsed
+    mean_time = df[dataname].mean()
+    std_time = df[dataname].std()
+
+    # Filter out rows where time_elapsed deviates significantly from the mean
+    df = df[abs(df[dataname] - mean_time) <= std_threshold * std_time]
+    return df
+
 
 def plot_timing(file, x, y):
     # Initialize lists to store dataframes and plot labels
@@ -29,8 +43,23 @@ def plot_timing(file, x, y):
 
         # Plot xtick every 10 elements
         df = listdf[i]
+        
+        # clear time data
+        df=clear_data(df, "time_elapsed", 0, 60, 2)
+
         plt.scatter(df[x][::5], df[y][::5], label=name[i].upper(), marker='o')  # Scatter plot with labels
+
+        # compute lower bound and upper bound to plot the variance
+        df_err = df.sem() #Return unbiased standard error of the mean over requested axis.
+        lower_bound = df[y] - df_err[y]
+        upper_bound = df[y] + df_err[y]
+
+        # lower_bound = df[y] - df[y].std()
+        # upper_bound = df[y] + df[y].mean().std()
+        plt.fill_between(df[x].values.tolist(), lower_bound.values.tolist(), upper_bound.values.tolist(), alpha=0.3,  facecolor='yellow', label="Standard Error of the Mean" if i == 0 else "")
+        
         plt.plot(df[x], df[y])  # Line plot
+
         i += 1
 
     # Set the font size for x and y ticks
@@ -68,7 +97,7 @@ def plot_timing(file, x, y):
 if __name__ == "__main__":
     # List of input files
     file = [
-        # "./output/finaltests/output_automa_patternlength.csv",
+        "./output/finaltests/output_automa_patternlength.csv",
         "./output/finaltests/output_kmp_patternlength.pkl",
         "./output/finaltests/output_radixtree_patternlength.pkl",
     ]
@@ -84,7 +113,7 @@ if __name__ == "__main__":
 
     # List of input files
     file = [
-        # "./output/finaltests/output_automa_textlength.csv",
+        "./output/finaltests/output_automa_textlength.csv",
         "./output/finaltests/output_radixtree_textlength.pkl",
         "./output/finaltests/output_kmp_textlength.pkl"
     ]
