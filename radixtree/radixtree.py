@@ -144,9 +144,9 @@ def test(filename, pattern):
         df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
         pattern=txt[:10000]
         print("pattern: ", len(pattern))
-        for i in range(5, 5000, 10): #step 10
+        for i in range(5, 70000, 10): #step 10
             print("test with pattern length: ", i)
-            df = testtiming(txt[:10000], pattern[:i], df)
+            df = testtiming(txt[:70000], pattern[:i], df)
         df.to_pickle("./output/output_radixtree_patternlength.pkl")
         
     except Exception as e:
@@ -157,27 +157,33 @@ def testtiming(cache_file, pattern, df):
     searching for a pattern. 
     It records the time taken and returns the results as a pandas DataFrame."""
     ncharacters= len(cache_file)
-    start =time.time()
-    root = RadixNode()
-
-    for index, token in enumerate(cache_file):
-        root.insert_token(token, index)
-
-    # Split the regular expression into components (you may need a proper regex parser)
-    components = pattern.split(".*")
-
-    # Search for each component and accumulate the matching indices
-    matching_indices = []
-    for component in components:
-        component_indices = root.search_tokens(component)
-        matching_indices.extend(component_indices)
-
-    # Print the matched indices
-    # colored_words = color_matched_words(cache_file, matching_indices)
-    # print(" ".join(colored_words))
-    time_elapsed = time.time() - start
     
+    try:
+        root = RadixNode()
 
+        cache_file_lines = open(filename, "r").read().split("\n")
+
+        for line in cache_file_lines:
+            words=line.split()
+            # Remove non-alphanumeric characters inside each word
+            # Use re.sub to replace the matched characters with an empty string
+            for index, token in enumerate(words):
+                root.insert_token(token, index)
+
+            # Search for each component and accumulate the matching indices
+            matching_indices = []
+            start = time.time()
+            founded_indices = root.search_tokens(pattern)
+            time_elapsed = time.time() - start
+            matching_indices.extend(founded_indices)
+
+            # Print the matched indices
+            # colored_words = color_matched_words(words, matching_indices)
+            # print(" ".join(colored_words))
+            root.delete_tree()
+    except Exception as e:
+        print(f"Error: {e}")
+    
     newdf= pd.DataFrame([[ncharacters, len(pattern), time_elapsed]], columns=['ncharacters', 'pattern_len', 'time_elapsed'])
     df = pd.concat([df,newdf], ignore_index=True)
     return df

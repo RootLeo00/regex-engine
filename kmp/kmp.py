@@ -127,9 +127,9 @@ def test(filename, pattern):
 		df = pd.DataFrame(columns=['ncharacters', 'pattern_len', 'time_elapsed'])
 		pattern=txt[:10000]
 		print("pattern: ", len(pattern))
-		for i in range(5, 5000, 10): 
+		for i in range(5, 70000, 10): 
 			print("test with pattern length: ", i)
-			df = testtiming(txt[:10000], pattern[:i], df)
+			df = testtiming(txt[:70000], pattern[:i], df)
 		df.to_pickle("./output/output_kmp_patternlength.pkl")
 		print(df)
 	except Exception as e:
@@ -141,11 +141,16 @@ def testtiming(txt, pattern, df):
 	It records the time taken and returns the results as a pandas DataFrame."""
 	lines = txt.split("\n")
 	time_elapsed = 0.0
+
 	#iterate over each line of lines and count the number of characters in each line
 	ncharacters= len(txt)
+
 	# Preprocess the pattern (calculate lps[] array)
+	# uncomment start and time_elapsed to include the preprocessing time
+	# start =time.time() 
 	lps=computeLPSArray(pattern, len(pattern))
 	lps=computeCarryOverArray(pattern, len(pattern), lps)
+	# time_elapsed += time.time() - start
 
 	for l in lines:
 		start =time.time()
@@ -178,7 +183,7 @@ if __name__ == "__main__":
 	
 	if len(sys.argv)==4:
 		if sys.argv[3] == "test":
-			test(filename=filename, pattern=pattern)
+			test(filename, pattern)
 		else:
 			print("Bad arguments. Usage: python3 kmp.py <filename> <pattern> [test]")
 			exit()
