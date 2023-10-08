@@ -54,11 +54,9 @@ def plot_timing(file, x, y):
         lower_bound = df[y] - df_err[y]
         upper_bound = df[y] + df_err[y]
 
-        # lower_bound = df[y] - df[y].std()
-        # upper_bound = df[y] + df[y].mean().std()
         plt.fill_between(df[x].values.tolist(), lower_bound.values.tolist(), upper_bound.values.tolist(), alpha=0.3,  facecolor='yellow', label="Standard Error of the Mean" if i == 0 else "")
         
-        plt.plot(df[x], df[y])  # Line plot
+        plt.plot(df[x], df[y])  
 
         i += 1
 
@@ -114,8 +112,8 @@ if __name__ == "__main__":
     # List of input files
     file = [
         "./output/finaltests/output_automa_textlength.csv",
+        "./output/finaltests/output_kmp_textlength.pkl",
         "./output/finaltests/output_radixtree_textlength.pkl",
-        "./output/finaltests/output_kmp_textlength.pkl"
     ]
 
     # Create a plot for text length vs. time elapsed
